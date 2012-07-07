@@ -1,0 +1,59 @@
+﻿/*process management*/ 
+pid_t   fork(void); 
+pid_t   waitpid(pid_t pid,size_t *status,size_t options);
+size_t  execve(const char *name,char *const *argv,char *const* envp);
+void    exit(size_t status);
+pid_t   getpid();
+pid_t   getppid();
+/*signals*/
+int sigaction(int sig, const struct sigaction *act,struct sigaction *oact);
+int sigreturn(unsigned long __unused);
+int sigprocmask(int how, const sigset_t *set, sigset_t *oldset);
+int sigpending(sigset_t *set);
+int sigsuspend( const sigset_t *sigmask );
+size_t  pause();
+size_t  alarm(time_t seconds);
+size_t  kill(pid_t pid,size_t sig);
+/*file system management*/
+size_t  creat(const char *name,mode_t mod);
+size_t  open(const char *name,size_t flag,mode_t mode);
+size_t  read(size_t fd,void *buf,size_t nbytes);
+size_t  write(size_t fd,const void *buf,size_t nbytes);
+size_t  close(size_t fd);
+off_t   lseek(size_t fd,off_t pos,size_t how);
+size_t  stat(const char *name,struct stat *buf);
+size_t  access(const char *nam,int a_mode);
+size_t  rename(const char *old_name,const char *new_name);
+size_t  dup(size_t fd);
+size_t  ioctl(size_t fd,size_t cmd,size_t option);
+size_t  fcntl(size_t fd,size_t cmd,size_t option);
+size_t  pipe(size_t *fd);
+size_t  mknod(const char *name,mode_t mode,dev_t dev);
+size_t  mkdir(const char *name,mode_t mode);
+size_t  rmdir(const char *name);
+size_t  link(const char *old_name,const char *new_name);
+size_t  unlink(const char *name);
+size_t  sync();
+size_t  chdir(const char *name);
+size_t  chroot(const char *name);
+size_t  getcwd(const char *buf,size_t size);
+size_t  mount(char *dev,const char*dir,char*type,ulong flags,void *data);
+size_t  umount(const char *dir_name,unsigned long flags);
+size_t  getdents(size_t fd,struct dirents *dents,size_t counts);
+/*Protection*/
+size_t  chmod(const char *name,mode_t mode);
+size_t  chown(const char *name,uid_t uid,gid_t gid);
+uid_t   getuid();
+gid_t   getgid();
+size_t  setuid(uid_t uid);
+size_t  setgid(gid_t gid);
+mode_t  umask(mode_t mode);
+size_t  fchmod(size_t fd,mode_t mode);
+size_t  fchown(size_t fd,uid_t uid,gid_t gid);
+/*time management*/
+time_t  time(time_t *ret); /*Get the elapsed time since Jan 1,1970*/
+size_t  stime(time_t when); /*set time since Jan 1,1970*/
+size_t  utime(const char *name,time_t last); /*set last access for file*/
+size_t  times(struct tm *tbuf);
+size_t  sleep(time_t seconds);  
+size_t  nanosleep(struct timespec *rqtp,struct timespec *rmtp);

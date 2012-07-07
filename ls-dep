@@ -1,0 +1,29 @@
+#!/bin/bash
+lld="/lib/ld-linux-x86-64.so.2 --list";
+bsd="/lib/ld-kfreebsd-x86-64.so.1 --list";
+ld=$lld;
+error_exit(){
+	echo $1;
+	exit 1;
+}
+det(){
+	if test -e $lld; then
+	ld=$lld;
+	else
+	ld=$bsd;
+	fi
+}
+ls_dep(){
+	det;
+	if [ ${1:0:1} == "/" ];then
+		$ld $1;
+	else
+		$ld `which $1`;
+	fi
+}
+### main execute
+
+if [ $# -ge 1 ];then
+	ls_dep $1;
+fi
+

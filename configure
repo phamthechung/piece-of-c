@@ -1,0 +1,114 @@
+#!/bin/sh
+# Pham The Chung
+# create 22/2/2010
+# set up variable
+par_argc=$#; #number of parameter on 
+par_argv=$@; #array of value
+
+show_help(){
+	echo -e "build x86_64 only";
+	echo -e "\ntype command:\n make \n make install\n";
+	echo -e "sumary: \n install to /usr/local/lib";
+}
+show_figure(){
+	echo -e " ";
+	echo -e "\t+----------------------------+";
+	echo -e "\t|   Pham The Chung   code    |";
+	echo -e "\t+----------------------------+";
+}
+confile=conftest.c;
+genfile(){
+cat >$confile<<CEOF
+int main(int argc,char **argv){
+	return 0;
+}
+CEOF
+}
+is_exist_gcc(){
+	genfile;
+	if ! which gcc>/dev/null;then
+		echo "no gcc compiler";
+		exit 1;
+	fi
+}
+check_header(){
+	err=0;
+	INC="/usr/include";
+	echo "checking header:";
+	if ! [ -e /usr/include/stdio.h ];then
+	  echo " stdio.h: no stdio.h";
+	  err=1;
+	fi
+	if ! [ -e /usr/include/malloc.h ];then
+		echo " malloc.h: not exist";
+		err=1;
+	fi
+	if [ $err -gt 0 ]; then
+	  echo " Some header must exist to build: stdio.h malloc.h";
+		exit 1;
+	else
+		echo " exist header that can build";
+	fi
+}
+gen_testc(){
+cat >$confile<<CEOF
+int main(int argc,char **argv){
+	int a=sizeof(long);
+	return a;
+}
+CEOF
+}
+is_gcc_work()
+{
+	if [ -e $confile ];then
+		rm -f $confile;
+	fi
+	gen_testc;
+	if ! gcc $confile&>/dev/null ;then
+	  echo "checking gcc work: cant compile ";
+	  exit 1;
+	else 
+	 echo "gcc working";
+	fi
+	unlink $confile;
+	unlink a.out;
+}
+
+is_long() {
+	gen_testc;
+	gcc $confile;
+	./a.out;
+	return $?;
+}
+
+enable_make(){
+	if test -e Makefile;then
+	return 0;
+	fi
+	mv makefile-hide Makefile;
+	return 0;
+}
+# main call sector
+
+is_exist_gcc;
+check_header;
+is_gcc_work;
+echo "checking your system is run 32 or 64 mode"
+is_long;
+byte_long=$?;
+if [ $byte_long != 8 ]; then
+	echo "this library now just support x86_64 processor to compile";
+	echo "your OS is not run on 64 bit mode to run this libary";
+	echo "long is $byte_long";
+	exit 1;
+else
+	echo "Your system is run 64 bit mode"
+fi
+## this enable to make
+enable_make;
+unlink a.out;
+unlink $confile;
+show_figure;
+show_help;
+exit 0;
+

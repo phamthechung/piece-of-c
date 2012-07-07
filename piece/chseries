@@ -1,0 +1,16 @@
+#!/bin/sh
+# use for modify series of clib.c
+# Written by Pham The Chung
+file=piece.c
+modify_series(){
+  pat=`grep -m1 '_SERIES' $file`;
+  nse=`echo $pat | cut -d" " -f3`;
+  def=`echo $pat|sed 's/\([#a-z]*_[A-Z]*\).*/\1/'`;
+  ((nse++));
+  last="$def $nse";
+  echo $pat / $last;
+  sed -i '23,24 s/$pat/$last/' $file;
+}
+
+modify_series;
+

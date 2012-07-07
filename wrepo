@@ -1,0 +1,33 @@
+@echo off
+rem this code belong to phamthechung0@gmail.com
+rem 
+rem	
+set myname=%0
+set pass_google=Tz5jJ3wR9kg8
+
+set hg_proto=https://
+set hg_user=pham.the.chung0%%40gmail.com
+set hg_url=piece-of-c.googlecode.com/hg/piece-of-c
+set hg_google_rw=https://piece-of-c.googlecode.com/hg/piece-of-c
+set gurl=%hg_proto%%hg_user%@%hg_url%
+rem echo %gurl%
+
+hg > nul
+
+if "%1" == "clone" ( 
+	echo clone %hg_google_rw%
+	hg clone %hg_google_rw%
+)
+if "%1" == "add" ( 
+	shift
+	hg add %2
+)
+if "%1" == "commit" ( 
+	shift 
+	hg commit
+)
+if "%1" == "push" (
+	echo pass google %pass_google%
+	hg push %gurl%
+)
+:exit

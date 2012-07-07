@@ -1,0 +1,17 @@
+#!/bin/bash
+# gen make file to build directory
+#
+gen_make(){
+cat >build/Makefile<<EOF
+# make file 
+#LIB=libpiece.so
+#STATIC=libpiece.a
+all:lib
+lib:
+	gcc -shared *.o -o libpiece.so
+static:
+	ar arc libpiece.a *.o
+EOF
+}
+gen_make;
+

@@ -1,0 +1,392 @@
+#!/bin/bash
+
+# Written by Pham The Chung
+# create Thu 03 Jun 2010 10:12:54 PM ICT 
+# last change 
+# this is for git version control
+
+User="'Pham The Chung'";
+Email="pham.the.chung0@gmail.com";
+pass_google="Tz5jJ3wR9kg8";
+
+
+### variable
+Version="1.3";
+Creat="Fri Jun 4 2010";
+Last="Tue July 13 2010";
+argc=$#;
+argv="$@";
+
+here=`pwd`;
+project_name="piece-of-c";
+progname="prepo";
+home=~
+prefix=~/.ssh
+piece_private_key=id_rsa
+piece_public_key=id_rsa.pub
+
+r_url="git://gitorious.org/piece-of-c/piece-of-c.git"
+rw_url="git@gitorious.org:piece-of-c/piece-of-c.git"
+
+gitorious_r="git://gitorious.org/piece-of-c/piece-of-c.git"
+gitorious_rw="git@gitorious.org:piece-of-c/piece-of-c.git"
+
+github_r="git://github.com/panfider/piece-of-c.git"
+github_rw="git@github.com:panfider/piece-of-c.git"
+
+sf_rw="ssh://panfider@piece-c.git.sourceforge.net/gitroot/piece-c/piece-c"
+sf_r="git://piece-c.git.sourceforge.net/gitroot/piece-c/piece-c"
+
+google_user="pham.the.chung0@gmail.com";
+hg_user="pham.the.chung0%%40gmail.com";
+hg_proto="https://"
+hg_url="piece-of-c.googlecode.com/hg/piece-of-c"
+hg_google_rw="https://piece-of-c.googlecode.com/hg/piece-of-c";
+
+piece_help="repo of piece-of-c project help: \n
+Here is list of command I support:\n
+\t add\t    Add file to index\n
+\t rm\t	remove file\n
+\t mv\t move file\n
+\t branch\t List, create, delete branchs\n
+\t clone\t  Clone a repository to your local.\n
+\t commit\t   Record changes to the repo\n
+\t push\t	Update remote refs along with objects\n
+\t pull\t	Fetch from and merge with another repository or local branch\n
+\t status\t show current status\n
+\t help\t	help command to get hep for that command\n
+\t install_myself\t install prepo to your system\n
+\t self_version\t this tool version\n";
+######key###
+write_private_key(){
+cat >$1/$piece_private_key<<EEOF
+-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: DES-EDE3-CBC,6646B55B279EB434
+
+ruIjGVNzcmXJflA8XOfEYHmLrr6NWpVdm3U2H/dyJwI1Ra7AYzlT0vGhDBKijzC/
+Q67m6sbDI26tJhfx4WAIMhr0fGUqxuDgGuxl0A5Ml0hMBV/RYaz4xhWyiwdEuNmY
+A93Gw3Ci5Si8jgTV4VQqPl/FjLDWoQDLkVw7i61GFvbPbC4cTdy0wMkMHFOHBV9l
+CFBlAMgZRxD1GdL0x0RTFcEWwuH20KNSNqdqkvedDtT2YcxtXfritfW1Ac3hm9iW
+0K3LkTl5QP2g1SchtNNWmQG2LzQyC2B8Z2VxsMreVSjrg6AzGwa9KyrCTiyCzQT7
+WeuLBOZ1a3KAwRVwiv8XYMuduJ3vNwNt/q2g9zt+6e0X/GtbKkDZdxqy864ub/HX
+7IW0kaZRRYZNJZZkbZ5vfTGlg2swZyhQzuNhWNnyKNcI3HJgrzGUDWPhyrIgHGDD
+TEzmv8LbcVkSJ0GiYPtlHqEBN16DstNIkzXNh1Vlkc0/tGJDD7EaZv7Xym/qI8wI
+FBW562vxQrBXIfkqNHc7wxvJyr1B/2IOIYLTL5ujVYd8LOr+VegQZrTyh0zMoEjr
+5PKLYEqqS1x5+jZaAZqbhEvs3+S0AiTas1Tw/hMTd7BMKRWjwSnIQ5M2TjKml01r
+f/MjklM9G+TRtDHuJ2rcORWZoZvasup4BFdQyLYSpwPQFi4WtmzRB0HaK4oJEXcG
+Q8PXogqbYymR20lSoee5ReRXk+oEyfo5gqPGVlGIEyeIxZlPAlWaHPTPkmOy81QO
+0CAubsxWfMnmvRTDrscyfriUbyMHR80Vt5VTYFqi3Ek=
+-----END RSA PRIVATE KEY-----
+EEOF
+}
+write_public_key(){
+cat >$1/$piece_public_key<<EEOF
+ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAIEAsUgtSjT9wT1LlhD0fDRZgRdAzCfvOB4fIE1+NjK4MOI4bBRGpaZgLnhTA3c7GpTpZW+nFc59usuO+vH0RbuZwwGNwyq5XmC3XRRHcfqW1J5tVcfrshzAlOPbo4NtyuXa0hv6Gk12GU3/hA/FBShZ/yokB2MEUSbRowOM+kI8vJk= pham.the.chung0@gmail.com
+EEOF
+}
+isdir(){
+	if [ -d $1 ]; then
+		return 0;
+	else
+		return 1;
+	fi
+}
+#=====check git version control
+isgitexist(){
+	which git &>/dev/null;
+	return $?;
+}
+iscmdexist(){
+	which $1 &>/dev/null;
+	return $?;
+}
+isdebian(){
+	cat /proc/version|grep debian &>/dev/null;
+	return $?;
+}
+# just copy git to local machine when system is debian
+# apt-get install git-core git-web
+copy_git(){
+	if isgitexist;then
+		return 0;
+	fi
+	if ! isdebian;then
+		echo "Your linux system is not Debian";
+		return 1;
+	fi
+	apt-get install git-core;
+	return $?;
+}
+copy_scm(){
+	if ! isdebian;then
+		echo "Your Linux system is not Debian";
+		return 1;
+	fi
+	case $1 in
+	"git")
+		apt-get install git-core;;
+	"mercurial")
+		apt-get install mercurial;;
+	"subversion")
+		apt-get install subversion;;
+	"cvs")
+		apt-get install cvs;;
+	*)
+		if ! [ -z $1 ]; then
+			apt-get install $@;
+		else
+			echo "$progname say: install what ?";
+		fi
+		true;;
+	esac
+}
+
+#########if key
+give_key(){
+  prefix=$1;
+  write_private_key $1;
+  chmod 0400 $1/id_rsa;
+  return 0;
+}
+
+iskeyexist(){
+	if ! isdir $home/.ssh;then
+	 return 1;
+	fi
+	if [ -e $home/.ssh/id_rsa ];then
+	 return 0;
+	fi
+	return 1;
+}
+ismykey(){
+	if iskeyexist; then
+	  give_key ".";
+	  cmp ./id_rsa $prefix/id_rsa &> /dev/null;
+	  ret=$?;
+	  unlink ./id_rsa;
+	  return $ret;
+	fi
+}
+#===code of command of git======
+
+# if want to clone
+# what type of clone read mode or rd mode
+# rw mode give_key;
+#
+clone_p(){
+	case $1 in
+		"gitorious") 
+			shift;
+			if [ $# == 0 ];then
+ 			  git clone $r_url;
+ 			  return $?;
+			fi
+			if [ $1 == "rw" ]; then
+			  if ! iskeyexist;then
+					give_key $prefix;
+			  fi
+			  git clone $rw_url;
+			fi
+			true;;
+		"github") 
+			shift;
+			if [ $# == 0 ];then
+ 			  git clone $github_r;
+ 			  return $?;
+			fi
+			if [ $1 == "rw" ]; then
+			  if ! iskeyexist;then
+					give_key $prefix;
+			  fi
+			   git clone $github_rw;
+			fi
+			true;;
+		"sf")	git clone $sf_r;;
+		"google")
+			code_url="$hg_proto$hg_user@$hg_url";
+			echo clone $code_url;
+			hg clone $code_url;;
+		*) echo "$progname: dont understand command";;
+	esac
+}
+clone(){
+	case $# in
+	0) echo "default clone from gitorious";
+		git clone $r_url;;
+	1) clone_p $@;;
+	2) clone_p $@;;
+	*) echo "prepo : I dont know this option";;
+	esac
+}
+
+add(){
+	$cmd add $@;
+	return $?;
+}
+remove(){
+	case $cmd in
+	"git")
+		$cmd rm $@;;
+	"hg") $cmd remove $@;;
+	esac
+	return $?;
+}
+branch(){
+	$cmd branch $@;
+	return $?;
+}
+errq="using:\n 
+\t prepo commit -m \"'text command here'\" to avoid error";
+commit(){
+	$cmd commit $@;
+	err=$?;
+	if [ $err == 1 ];then
+		echo -e $errq;
+	fi
+	return $?;
+}
+push(){
+	case $cmd in
+		"git")
+			$cmd push origin master;;
+		"hg")
+			echo "google pass: $pass_google";
+			$cmd push;;
+		*) echo " khong co command nay";;
+	esac
+	return $?;
+}
+pull(){
+	$cmd pull $@;
+	return $?;
+}
+status(){
+	$cmd status $@;
+	return $?;
+}
+piece_init(){
+	if [ -d ./$name ]; then
+		rm -fr $name/*;
+	fi
+	cd $name;
+	$cmd init $@;
+}
+move(){
+	case $cmd in
+	"git") $cmd mv $@;;
+	"hg") $cmd mv $@;
+		echo "$cmd dont have mv command";;
+	esac
+	return $?;
+}
+merge(){
+	$cmd merge $@;
+	return $?;
+}
+copy_prepo(){
+	path="/bin";
+	if [ $# -ge 1 ]; then
+		cp -v $0 $1;
+	fi
+	if ! cmp $0 $path/prepo &>/dev/null;then
+		cp -vuf $0 $path;
+	fi
+	return $?;
+}
+phelp(){
+	clone_help="syntax:\n\t$progname clone [gitorious|github|sf|google] [rw]\n
+	default is gitorious with readonly\n
+	if clone code.google.com, must have mercurial\n
+	example:\n\t
+	# $progname clone github rw\n
+	simple command to get\n\t
+	# $progname clone\n";
+	
+	ins_help="syntax:\n\t$progname $1 [path]\n
+	default path is /bin\n";
+	case $1 in
+	"clone")
+		echo -e $clone_help;
+		true;;
+	"install_myself")
+		echo -e $ins_help;
+		true;;
+	*)
+		echo "help dont support $1 now";
+		true;;
+	esac
+}
+exe_cmd(){
+
+	case $1 in
+	"add") 
+		shift;
+		add $@;;
+	"rm")
+		shift;
+		remove $@;;
+	"mv")
+		shift;
+		move $@;;
+	"merge")
+		shift;
+		merge $@;;
+	"branch")
+		shift;
+		branch $@;;
+	"clone") 
+		shift;
+		clone $@;;
+	"commit")
+		shift;
+		commit "$@";;
+	"push")
+		shift;
+		push $@;;
+	"pull")
+		shift;
+		pull $@;;
+	"init") 
+		shift;
+		piece_init;;
+	"status")
+		shift;
+		status $@;;
+	"myconfig")
+		git config user.name $Name;
+		git config user.email $Email;;
+	"givekey")
+		give_key $prefix;;
+	"help")
+		shift;
+		phelp $@;;
+	"install")
+		shift;
+		copy_scm $@;;
+	"install_myself")
+		shift;
+		copy_prepo $@;;
+	"self_version")
+		echo "$progname version $Version";
+		echo "Written by $User";;
+	*) echo "not support command";;
+	esac
+}
+
+## execute site
+
+cmd=git;
+if isdir $here/.hg;then
+	cmd="hg";
+fi
+
+###echo $cmd;
+if [ $# == 0 ]; then
+	echo -e $piece_help;
+else
+	exe_cmd $@;
+fi
+
+
+exit 0;
