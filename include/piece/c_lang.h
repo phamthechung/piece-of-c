@@ -6,7 +6,7 @@
 #else
 #define __x86_64__
 #endif
-
+#if 0
 #ifdef __x86_32__
 typedef unsigned int size_t;
 typedef signed int ssize_t;
@@ -15,7 +15,7 @@ typedef signed int ssize_t;
 typedef unsigned long size_t;
 typedef signed long ssize_t;
 #endif
-
+#endif
 #define _STR(x)	#x
 #define STR(x)	_STR(x)
 

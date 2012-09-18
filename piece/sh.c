@@ -241,7 +241,7 @@ int do_external(char *string){
 	char *name=first_word(string);
 	char *pt = which(name);
 	if(pt){
-		int pid= vfork();
+		int pid= fork();
 		if(pid==0) command_status =execve(pt,argv,NULL);
 	}
 	else {
@@ -369,7 +369,7 @@ int arg ARG{
 				case 'c': if(argc<3) die("not enough argument\n");
 					char *where=which(first_word(argv[optind]));
 					int pid;
-					pid=vfork();
+					pid=fork();
 					if(pid==0){
 						command_status=execve(where,argv+2,NULL);
 						exit(0);
