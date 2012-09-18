@@ -398,7 +398,7 @@ char *read_line_in_file(){
 	if(r==0) return NULL;
 	char *pt= (char*)malloc(r+2);
 	strncpy(pt,file_mem_pt,r++);
-	file_mem+pt+=r;
+	file_mem_pt+=r;
 	return pt;
 }
 int process_file(void){
