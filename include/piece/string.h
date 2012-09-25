@@ -6,8 +6,8 @@
 #ifdef _STRING_H
 #define _STRING_H
 
-#include "piece_code.h"
-#include "itype.h"
+#define Link extern
+#define _PP(t,n) t n
 
 /*
 	dont know what happen if overlap memory
@@ -65,11 +65,7 @@ Link  _PP(int,ffs)(int __i);
 /*
   copy src to at dpos in dst for _bytes bytes
 */
-Link  _PP(char *,cpynStringat)
-( 
-	char *dst,const char *src,
-	size_t dpos,size_t _bytes
-);
+Link  _PP(char *,cpynStringat)(char *dst,const char *src,size_t);
 
 
 #endif
