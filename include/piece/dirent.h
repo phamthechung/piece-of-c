@@ -22,7 +22,7 @@ typedef struct DIR{
 	char *pos; /*pos pointer*/
 	long next;
 	long check; /*check whether it reach sizedir*/
-}Dir;
+}DIR;
 //typedef Dir DIR;
 /*
 	Dir *dp=piece_opendir("/");
