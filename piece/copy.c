@@ -42,7 +42,7 @@ int copy(const char *src,const char *dst){
 	#undef CP_SIZE
 }
 /*
-	
+	incomplete code	
 */
 int copydir(const char *src,const char *dst){
 	int fd1=open(src,O_RDONLY,0);
