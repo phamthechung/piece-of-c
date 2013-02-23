@@ -7,13 +7,12 @@
 
 User="'Pham The Chung'";
 Email="pham.the.chung0@gmail.com";
-pass_google="Tz5jJ3wR9kg8";
 
 
 ### variable
 Version="1.3";
 Creat="Fri Jun 4 2010";
-Last="Tue July 13 2010";
+Last="Sat Feb 23 2013";
 argc=$#;
 argv="$@";
 
@@ -31,8 +30,8 @@ rw_url="git@gitorious.org:piece-of-c/piece-of-c.git"
 gitorious_r="git://gitorious.org/piece-of-c/piece-of-c.git"
 gitorious_rw="git@gitorious.org:piece-of-c/piece-of-c.git"
 
-github_r="git://github.com/panfider/piece-of-c.git"
-github_rw="git@github.com:panfider/piece-of-c.git"
+github_r="git://github.com/phamthechung/piece-of-c.git"
+github_rw="git@github.com:phamthechung/piece-of-c.git"
 
 sf_rw="ssh://panfider@piece-c.git.sourceforge.net/gitroot/piece-c/piece-c"
 sf_r="git://piece-c.git.sourceforge.net/gitroot/piece-c/piece-c"
@@ -62,22 +61,35 @@ write_private_key(){
 cat >$1/$piece_private_key<<EEOF
 -----BEGIN RSA PRIVATE KEY-----
 Proc-Type: 4,ENCRYPTED
-DEK-Info: DES-EDE3-CBC,6646B55B279EB434
+DEK-Info: DES-EDE3-CBC,A1F9FF93CF2FAE04
 
-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
+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
 -----END RSA PRIVATE KEY-----
+
 EEOF
 }
 write_public_key(){
